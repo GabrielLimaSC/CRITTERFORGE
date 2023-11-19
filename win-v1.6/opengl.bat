@@ -1,0 +1,1 @@
+windowkill.exe --rendering-driver opengl3
