@@ -276,13 +276,33 @@ int readch();
 
 */
 
+/**
+⠀⠀⠀⣀⠔⠒⠒⠂⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⢰⢅⠀⠀⢀⣤⢄⢂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⠀⣾⡆⠀⠀⠀⢸⠼⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
+⠀⢀⢗⠂⠀⠀⡀⠈⢉⠅⠇⠀⠀⠀⠀⠀⠀⢠⣄⠀
+⠀⠈⠢⣓⠔⣲⠖⡫⠊⡘⠀⠀⠀⠀⠀⠀⠲⡟⠙⡆
+⠀⢀⢀⠠⠘⣇⠖⢄⠀⠉⠐⠠⢄⣀⡀⠀⠜⠀⠀⣁
+⠘⣏⣀⣀⣀⠃⠀⠀⠑⣀⣀⣀⣰⠼⠇⠈⠄⠀⠈⡻
+⠀⠁⠀⠀⢰⠀⠀⠀⠀⠠⠀⠡⡀⠀⠀⠀⠈⡖⠚⠀
+⠀⠀⠀⡠⠘⠀⠀⠀⠀⢀⠆⠀⠐⡀⠀⡠⠊⣠⠀⠀
+⠀⠀⢐⠀⠀⠁⡀⠀⠀⢀⠀⠀⠀⢨⠀⡠⡴⠂⠀⠀
+⠀⢀⣨⣤⠀⠀⠐⠃⠐⠚⠢⠀⠀⠈⠑⠊⠀⠀⠀⠀
+⠀⠘⠓⠋⠉⠁⠀⠀⠀⠀⠀⠓⢶⡾⠗⠀⠀⠀⠀⠀
+
+
+
+  */ 
+
 #include "keyboard.h"
 #include "screen.h"
 #include "timer.h"
+#include <stddef.h>
 #include <stdio.h>
+#include <stdlib.h>
 #include <string.h>
+#include <unistd.h>
 
-// Variáveis fictícias para representar os Pokémon e seu estado
 typedef struct {
   char name[20];
   char type[10];
@@ -292,25 +312,159 @@ typedef struct {
   int attack3;
   int attack4;
   int criticalattack;
-  char critticaltype[10];
+  char criticaltype[10];
 } Pokemon;
 
-Pokemon choice1 = {"Charmander","Fire",    100, 15, 20, 10, 10, 25, "Grass"};
-Pokemon choice2 = {"Squirtle",  "Water",   100, 15, 20, 10, 10, 25, "Fire" };
-Pokemon choice3 = {"Bulbasaur", "Grass",   100, 15, 20, 10, 10, 25, "Water"};
-Pokemon choice4 = {"Pikachu",   "Electric",100, 15, 20, 10, 10, 20, "Water"};
+void pr_pikachu() {
+  printf(";-.          ___,\n");
+  printf("  `.`\\_...._/`.-\"`\n");
+  printf("    \\       /      ,\n");
+  printf("    /()   () \\    .' `-._\n");
+  printf("   |)  .    ()\\  /   _.'\n");
+  printf("   \\  -'-     ,; '. <\n");
+  printf("    ;.__     ,;|   > \\\n");
+  printf("   / ,    / ,  |.-'.-'\n");
+  printf("  (_/    (_/ ,;|.<`\n");
+  printf("    \\    ,     ;-`\n");
+  printf("     >   \\    /\n");
+  printf("    (_,-'`> .'\n");
+  printf("      (_,'\n");
+}
 
-Pokemon playerPokemon; // Agora será escolhido pelo jogador
-Pokemon enemyPokemon = {"Charmander", "Fire", 100, 15, 20, 10, 10, 25, "Grass"};
+Pokemon choice1 = {"Charmander", "Fire", 100, 15, 20, 10, 10, 25, "Grass"};
+Pokemon choice2 = {"Squirtle", "Water", 100, 15, 20, 10, 10, 25, "Fire"};
+Pokemon choice3 = {"Bulbasaur", "Grass", 100, 15, 20, 10, 10, 25, "Water"};
+Pokemon choice4 = {"Pikachu", "Electric", 100, 15, 20, 10, 10, 20, "Water"};
 
-int choosePokemon() {
-  // Desenha a tela de escolha de Pokémon
+typedef struct {
+  char playerName[20];
+  Pokemon pokemon;
+} Player;
+
+Player player1; // Chosen by player 1
+Player player2; // Chosen by player 2
+
+typedef struct {
+  char playerName[20];
+  int victories;
+} PlayerStats;
+
+void savePlayerStats(PlayerStats *winner) {
+  FILE *file = fopen("player_stats.dat", "a");
+
+  if (file == NULL) {
+    // Se o arquivo não existir, cria um novo
+    file = fopen("player_stats.dat", "w");
+    if (file == NULL) {
+      fprintf(stderr, "Erro ao criar o arquivo de estatísticas.\n");
+      exit(1);
+    }
+  }
+
+  fwrite(winner, sizeof(PlayerStats), 1, file);
+  fclose(file);
+}
+
+void updatePlayerStats(PlayerStats *winner) {
+  FILE *file = fopen("player_stats.dat", "r+");
+
+  if (file == NULL) {
+    fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
+    exit(1);
+  }
+
+  PlayerStats playerStats;
+  int found = 0;
+
+  while (fread(&playerStats, sizeof(playerStats), 1, file) == 1) {
+    if (strcmp(playerStats.playerName, winner->playerName) == 0) {
+      playerStats.victories++;
+      found = 1;
+      fseek(file, -sizeof(playerStats), SEEK_CUR);
+      fwrite(&playerStats, sizeof(playerStats), 1, file);
+      break;
+    }
+  }
+
+  fclose(file);
+
+  if (!found) {
+    // Se o jogador não existir nas estatísticas, adiciona um novo registro
+    playerStats.victories = 1;
+    strncpy(playerStats.playerName, winner->playerName,
+            sizeof(playerStats.playerName));
+
+    // Reabre o arquivo para escrever o novo registro
+    file = fopen("player_stats.dat", "a");
+    if (file == NULL) {
+      fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
+      exit(1);
+    }
+
+    fwrite(&playerStats, sizeof(playerStats), 1, file);
+    fclose(file);
+  }
+}
+
+void loadPlayerStats() {
+  FILE *file = fopen("player_stats.dat", "r");
+
+  if (file == NULL) {
+    fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
+    exit(1);
+  }
+
+  PlayerStats playerStats;
+
+  printf("\nEstatísticas de Jogadores:\n");
+
+  while (fread(&playerStats, sizeof(PlayerStats), 1, file) == 1) {
+    printf("Jogador: %s | Vitórias: %d\n", playerStats.playerName,
+           playerStats.victories);
+  }
+
+  fclose(file);
+}
+
+void getPlayerName(char *name, int playerNumber) {
   screenSetColor(WHITE, BLACK);
   screenClear();
   screenInit(0);
 
   screenGotoxy(5, 5);
-  printf("ESCOLHA SEU POKÉMON");
+  printf("Digite o nome do Player %d: ", playerNumber);
+  screenUpdate();
+
+  int index = 0;
+  char inputChar;
+
+  // Modificação aqui - ler os caracteres diretamente com getchar
+  while (1) {
+    inputChar = getchar();
+    if (inputChar == '\n' || index >= 19) {
+      break;
+    }
+    name[index++] = inputChar;
+    name[index] = '\0'; // Garante que a string esteja sempre terminada
+
+    // Atualiza a tela com o nome digitado
+    screenGotoxy(5, 7);
+    printf("Nome: %s               ", name);
+    screenGotoxy(5, 7);
+    screenUpdate();
+  }
+
+  fflush(stdin);
+}
+
+int choosePokemon(Player *player) {
+  // Drawing the Pokémon selection screen
+  screenSetColor(WHITE, BLACK);
+  screenClear();
+  screenInit(0);
+
+  screenGotoxy(5, 5);
+  printf("Vez do %s escolher o POKÉMON", player->playerName);
 
   screenGotoxy(5, 8);
   printf("[1] %s", choice1.name);
@@ -323,22 +477,22 @@ int choosePokemon() {
 
   screenUpdate();
 
-  // Aguarda a entrada do jogador
+  // Wait for player input
   while (1) {
     if (keyhit()) {
       int key = readch();
       switch (key) {
       case '1':
-        playerPokemon = choice1;
+        player->pokemon = choice1;
         return 1;
       case '2':
-        playerPokemon = choice2;
+        player->pokemon = choice2;
         return 1;
       case '3':
-        playerPokemon = choice3;
+        player->pokemon = choice3;
         return 1;
       case '4':
-        playerPokemon = choice4;
+        player->pokemon = choice4;
         return 1;
       default:
         break;
@@ -347,124 +501,250 @@ int choosePokemon() {
   }
 }
 
-void processPlayerInput(int key) {
-  // Lógica para processar a entrada do jogador
+void processPlayerInput(int key, Player *attacker, Player *defender) {
+  // Logic to process player input
   switch (key) {
   case '1':
-    // Lógica para o ataque
-    if(strcmp(playerPokemon.critticaltype, enemyPokemon.type) == 1){
-      enemyPokemon.health -= playerPokemon.attack3;
-    }else{
-      enemyPokemon.health -= playerPokemon.criticalattack;
+    if (strcmp(attacker->pokemon.criticaltype, defender->pokemon.type) == 0) {
+      defender->pokemon.health -= attacker->pokemon.attack3;
+    } else {
+      defender->pokemon.health -= attacker->pokemon.criticalattack;
     }
     break;
-    
+
   case '2':
-    // Lógica para o segundo ataque
-    enemyPokemon.health -= playerPokemon.attack2;
+    defender->pokemon.health -= attacker->pokemon.attack2;
     break;
-    
+
   case '3':
-    if(playerPokemon.critticaltype != enemyPokemon.type){
-      enemyPokemon.health -= playerPokemon.attack3;
-    }else{
-      enemyPokemon.health -= playerPokemon.criticalattack;
+    if (strcmp(attacker->pokemon.criticaltype, defender->pokemon.type) != 0) {
+      defender->pokemon.health -= attacker->pokemon.attack3;
+    } else {
+      defender->pokemon.health -= attacker->pokemon.criticalattack;
     }
     break;
-    
+
   case '4':
-    // Lógica para o quarto ataque
-    enemyPokemon.health -= playerPokemon.attack4;
+    defender->pokemon.health -= attacker->pokemon.attack4;
     break;
   default:
     break;
   }
 }
 
-void drawBattleScreen() {
-  // Limpa a tela e define as cores do texto e do fundo
-  screenSetColor(WHITE, BLACK);
+void drawGameOverScreen(Player *currentPlayer, Player *opponent,
+                        int *playAgain) {
+  screenSetColor(RED, BLACK);
   screenClear();
 
-  // Desenha as bordas da tela
-  screenInit(2);
+  screenInit(0);
 
-  // Desenha o campo de batalha
-  screenGotoxy(5, 5);
-  printf("BATALHA POKÉMON");
-
-  // Desenha os Pokémon e suas informações
+  screenGotoxy(5, 6);
+  printf("GAME OVER");
   screenGotoxy(5, 8);
-  printf("Player: %s - Health: %d", playerPokemon.name, playerPokemon.health);
+  printf("O GANHADOR FOI: %s", currentPlayer->playerName);
 
   screenGotoxy(5, 10);
-  printf("Enemy: %s - Health: %d", enemyPokemon.name, enemyPokemon.health);
+  printf("Deseja jogar novamente? (S/N)");
+  screenUpdate();
 
-  // Desenha o menu de ataques
+  char playAgainResponse;
+  do {
+    if (keyhit()) {
+      playAgainResponse = readch();
+    }
+  } while (playAgainResponse != 'S' && playAgainResponse != 's' &&
+           playAgainResponse != 'N' && playAgainResponse != 'n');
+
+  if (playAgainResponse == 'S' || playAgainResponse == 's') {
+    *playAgain = 1;
+  } else {
+    *playAgain = 0;
+  }
+
+  // Modificação para exibir o placar
+  screenGotoxy(5, 12);
+  printf("Pressione 'V' para ver o placar");
+  screenUpdate();
+
+  int keyPressed = 0;
+  while (!keyPressed) {
+    if (keyhit()) {
+      char viewScoreboard = readch();
+      if (viewScoreboard == 'V' || viewScoreboard == 'v') {
+        loadPlayerStats(); // Exibe estatísticas após cada jogo
+      }
+      keyPressed = 1;
+    }
+  }
+}
+
+void drawBattleScreen(Player *currentPlayer, Player *opponent) {
+  // Clear the screen and set text and background colors
+  screenSetColor(WHITE, BLACK);
+
+  // Draw the screen borders
+  screenInit(2);
+
+  // Draw the battlefield
+  screenGotoxy(5, 5);
+  printf("BATALHA POKÉMON");
+  // Draw Pokémon and their information for the current player
+  screenGotoxy(5, 8);
+  printf("%s: %s - Vida: %d", currentPlayer->playerName,
+         currentPlayer->pokemon.name, currentPlayer->pokemon.health);
+
+  // Draw Pokémon and their information for the opponent
+  screenGotoxy(5, 10);
+  printf("%s: %s - Vida: %d", opponent->playerName, opponent->pokemon.name,
+         opponent->pokemon.health);
+
+  // Draw the attack menu
   screenGotoxy(5, 15);
-  printf("Escolha um ataque %s:", playerPokemon.name);
+  printf("Escolha um ataque %s:", currentPlayer->playerName);
   screenGotoxy(5, 17);
-  printf("[1] %d", playerPokemon.attack1);
+  printf("[1] %d", currentPlayer->pokemon.attack1);
   screenGotoxy(5, 18);
-  printf("[2] %d", playerPokemon.attack2);
+  printf("[2] %d", currentPlayer->pokemon.attack2);
   screenGotoxy(5, 19);
-  printf("[3] %d", playerPokemon.attack3);
+  printf("[3] %d", currentPlayer->pokemon.attack3);
   screenGotoxy(5, 20);
-  printf("[4] %d", playerPokemon.attack4);
+  printf("[4] %d", currentPlayer->pokemon.attack4);
 
-  // Atualiza a tela imediatamente após o desenho
+  // Update the screen immediately after drawing
   screenUpdate();
 }
 
+/**
+void charmander() {
+    printf("⠀⠀⣀⠔⠒⠒⠂⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    printf("⠀⠀⢰⢅⠀⠀⢀⣤⢄⢂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    printf("⠀⠀⣾⡆⠀⠀⠀⢸⠼⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    printf("⠀⢀⢗⠂⠀⠀⡀⠈⢉⠅⠇⠀⠀⠀⠀⠀⠀⢠⣄⠀\n");
+    printf("⠀⠈⠢⣓⠔⣲⠖⡫⠊⡘⠀⠀⠀⠀⠀⠀⠲⡟⠙⡆\n");
+    printf("⠀⢀⢀⠠⠘⣇⠖⢄⠀⠉⠐⠠⢄⣀⡀⠀⠜⠀⠀⣁\n");
+    printf("⠘⣏⣀⣀⣀⠃⠀⠀⠑⣀⣀⣀⣰⠼⠇⠈⠄⠀⠈⡻\n");
+    printf("⠀⠁⠀⠀⢰⠀⠀⠀⠀⠠⠀⠡⡀⠀⠀⠀⠈⡖⠚⠀\n");
+    printf("⠀⠀⠀⡠⠘⠀⠀⠀⠀⢀⠆⠀⠐⡀⠀⡠⠊⣠⠀⠀\n");
+    printf("⠀⠀⢐⠀⠀⠁⡀⠀⠀⢀⠀⠀⠀⢨⠀⡠⡴⠂⠀⠀\n");
+    printf("⠀⢀⣨⣤⠀⠀⠐⠃⠐⠚⠢⠀⠀⠈⠑⠊⠀⠀⠀⠀\n");
+    printf("⠀⠘⠓⠋⠉⠁⠀⠀⠀⠀⠀⠓⢶⡾⠗⠀⠀⠀⠀⠀\n");
+
+}
+
+void squirtle() {
+    printf("⠀⠀⠀⠀⠀⣀⠤⠤⠤⠤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    printf("⠀⠀⡰⠋⠀⠀⠀⠀⠀⠀⠡⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    printf("⠀⢠⠁⢰⣴⠀⠀⠀⠀⣿⡇⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    printf("⢀⣸⠀⠈⠙⠃⣀⣀⡀⣤⡄⢸⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    printf("⢰⠃⠉⠁⠂⢦⣀⢀⡀⠤⠤⣥⣌⡀⠀⠈⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    printf("⠘⠦⡀⠀⠀⠀⠈⡄⠂⠉⠀⣀⠵⢵⡒⠠⢴⡋⠉⢑⠖⠦⢄⠀⠀⠀⠀⠀⠀\n");
+    printf("⠀⠀⠈⠲⢤⣤⣴⡥⢄⡨⠋⠀⠒⢄⡑⣄⠀⠈⠄⠀⠀⠀⠈⡝⢀⣀⠀⠀⠀\n");
+    printf("⠀⠀⠀⠀⠈⢿⣿⣿⣆⡇⠀⠀⠊⠉⠉⡆⠈⠢⣶⣀⡀⢀⡰⠋⠀⠀⠉⠑⡄\n");
+    printf("⠀⠀⠀⠀⠀⠀⢿⣿⣿⣔⠀⠠⡀⠀⢀⡇⠀⠀⠠⣇⠈⢹⠀⠀⡀⠀⠀⠀⠘⡄\n");
+    printf("⠀⠀⠀⠀⠀⠀⠀⠙⠛⢿⣿⣿⣿⣿⣶⣶⢆⠀⠀⠈⠉⠈⢄⠀⠀⠀⠂⠀⢀⠇\n");
+    printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠁⠀⠀⠑⠦⣄⠀⠀⠀⠁⠀⠈⠀⢀⠎⠀\n");
+    printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠓⠒⠲⠖⠒⠊⠁⠀⠀\n");
+
+}
+
+
+void bulbasour() {
+    printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⡀⠈⡖⡤⠄⠀\n");
+    printf("⠀⠀⢀⡀⠀⠀⠀⡐⠁⠀⠀⠠⠐⠂⠀⠁⠀⠀⠀⠀\n");
+    printf("⠀⠰⡁⠐⢉⣉⣭⡍⠁⠂⠉⠘⡀⠀⠀⠀⠀⠂⠡⠀\n");
+    printf("⢀⣊⠀⡄⠻⠿⠋⠀⠀⠀⠀⠀⢃⠀⠀⠀⠀⠀⠀⢀\n");
+    printf("⡎⣾⠀⠁⣴⡆⠀⠡⢺⣿⣆⠀⢠⢱⣄⠀⠀⠀⠀⠈\n");
+    printf("⡑⠟⠀⠀⠀⠀⠀⢀⣸⡿⠟⠀⠀⠈⢿⣿⡦⡀⠀⡰\n");
+    printf("⠙⠔⠦⣤⣥⣤⣤⣤⡤⠆⠀⠀⠀⠀⢀⢀⠀⠈⠎⠀\n");
+    printf("⠀⠀⠈⣰⡋⢉⠉⠁⠒⠂⢇⢠⡆⠀⠸⢴⣿⠀⠘⠀\n");
+    printf("⠀⠀⠘⡿⠃⠀⠨⠒⢆⣸⣿⠁⠀⡠⡇⠈⠋⠀⠰⠀\n");
+    printf("⠀⠀⠀⠛⠒⠒⠁⠀⠈⠷⡤⠤⠐⠀⠘⠒⠒⠖⠁⠀\n");
+
+}
+
+*/
+
 int main() {
-  // Inicializa as bibliotecas
-  keyboardInit();
-  screenInit(0);
-  timerInit(1000);
+  int playAgain = 1;
 
-  // Escolhe o Pokémon do jogador
-  while (!choosePokemon()) {
-    // Continua solicitando até que uma escolha válida seja feita
-  }
+  while (playAgain) {
+    keyboardInit();
+    screenInit(0);
+    timerInit(1000);
 
-  // Loop principal do jogo
-  int gameOver = 0;
-  while (!gameOver) {
-    // Desenha a tela de batalha
-    drawBattleScreen();
+    memset(&player1, 0, sizeof(Player));
+    memset(&player2, 0, sizeof(Player));
 
-    // Aguarda a entrada do jogador
-    int keyPressed = 0;
-    while (!keyPressed) {
-      if (keyhit()) {
-        int key = readch();
-        // Lógica para tratar a entrada do jogador
-        processPlayerInput(key);
+    getPlayerName(player1.playerName, 1);
+    getPlayerName(player2.playerName, 2);
 
-        keyPressed = 1;
+    while (!choosePokemon(&player1)) {
+      // Continua solicitando até que uma escolha válida seja feita
+    }
+
+    while (!choosePokemon(&player2)) {
+      // Continua solicitando até que uma escolha válida seja feita
+    }
+
+    int gameOver = 0;
+    Player *currentPlayer = &player1;
+    Player *opponent = &player2;
+
+    while (!gameOver) {
+      drawBattleScreen(currentPlayer, opponent);
+
+      int keyPressed = 0;
+      while (!keyPressed) {
+        if (keyhit()) {
+          int key = readch();
+          processPlayerInput(key, currentPlayer, opponent);
+          keyPressed = 1;
+        }
+
+        if (timerTimeOver()) {
+          // Lógica para atualizar a tela durante a batalha
+          // (por exemplo, animações, atualizações de estado, etc.)
+          // ...
+
+          // Atualiza a tela imediatamente após as alterações
+          screenUpdate();
+        }
       }
 
-      if (timerTimeOver()) {
-        // Lógica para atualizar a tela durante a batalha
-        // (por exemplo, animações, atualizações de estado, etc.)
-        // ...
+      if (currentPlayer == &player1) {
+        currentPlayer = &player2;
+        opponent = &player1;
+      } else {
+        currentPlayer = &player1;
+        opponent = &player2;
+      }
 
-        // Atualiza a tela imediatamente após as alterações
-        screenUpdate();
+      if (player1.pokemon.health <= 0 || player2.pokemon.health <= 0) {
+        gameOver = 1;
+
+        Player *winner;
+        if (player1.pokemon.health <= 0) {
+          winner = &player2;
+        } else {
+          winner = &player1;
+        }
+
+        // Salva as estatísticas do vencedor
+        savePlayerStats(
+            &(PlayerStats){.playerName = winner->playerName, .victories = 0});
+        updatePlayerStats(winner); // Atualizar estatísticas
+        loadPlayerStats();         // Exibir estatísticas após cada jogo
+
+        // Desenha a tela de game over
+        drawGameOverScreen(winner, opponent, &playAgain);
       }
     }
 
-    // Lógica para atualizar o estado da batalha e verificar o fim do jogo
-    if (playerPokemon.health <= 0 || enemyPokemon.health <= 0) {
-      gameOver = 1;
-      // Lógica para exibir mensagem de vitória ou derrota
-    }
+    keyboardDestroy();
+    screenDestroy();
+    timerDestroy();
   }
-
-  // Encerra as bibliotecas
-  keyboardDestroy();
-  screenDestroy();
-  timerDestroy();
 
   return 0;
 }
