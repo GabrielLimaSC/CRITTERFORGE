@@ -276,23 +276,6 @@ int readch();
 
 */
 
-/**
-⠀⠀⠀⣀⠔⠒⠒⠂⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⢰⢅⠀⠀⢀⣤⢄⢂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⠀⣾⡆⠀⠀⠀⢸⠼⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀
-⠀⢀⢗⠂⠀⠀⡀⠈⢉⠅⠇⠀⠀⠀⠀⠀⠀⢠⣄⠀
-⠀⠈⠢⣓⠔⣲⠖⡫⠊⡘⠀⠀⠀⠀⠀⠀⠲⡟⠙⡆
-⠀⢀⢀⠠⠘⣇⠖⢄⠀⠉⠐⠠⢄⣀⡀⠀⠜⠀⠀⣁
-⠘⣏⣀⣀⣀⠃⠀⠀⠑⣀⣀⣀⣰⠼⠇⠈⠄⠀⠈⡻
-⠀⠁⠀⠀⢰⠀⠀⠀⠀⠠⠀⠡⡀⠀⠀⠀⠈⡖⠚⠀
-⠀⠀⠀⡠⠘⠀⠀⠀⠀⢀⠆⠀⠐⡀⠀⡠⠊⣠⠀⠀
-⠀⠀⢐⠀⠀⠁⡀⠀⠀⢀⠀⠀⠀⢨⠀⡠⡴⠂⠀⠀
-⠀⢀⣨⣤⠀⠀⠐⠃⠐⠚⠢⠀⠀⠈⠑⠊⠀⠀⠀⠀
-⠀⠘⠓⠋⠉⠁⠀⠀⠀⠀⠀⠓⢶⡾⠗⠀⠀⠀⠀⠀
-
-
-
-  */ 
 
 #include "keyboard.h"
 #include "screen.h"
@@ -300,8 +283,11 @@ int readch();
 #include <stddef.h>
 #include <stdio.h>
 #include <stdlib.h>
+#include <stdbool.h>
 #include <string.h>
 #include <unistd.h>
+#define True 1
+#define False 0
 
 typedef struct {
   char name[20];
@@ -315,20 +301,152 @@ typedef struct {
   char criticaltype[10];
 } Pokemon;
 
-void pr_pikachu() {
-  printf(";-.          ___,\n");
-  printf("  `.`\\_...._/`.-\"`\n");
-  printf("    \\       /      ,\n");
-  printf("    /()   () \\    .' `-._\n");
-  printf("   |)  .    ()\\  /   _.'\n");
-  printf("   \\  -'-     ,; '. <\n");
-  printf("    ;.__     ,;|   > \\\n");
-  printf("   / ,    / ,  |.-'.-'\n");
-  printf("  (_/    (_/ ,;|.<`\n");
-  printf("    \\    ,     ;-`\n");
-  printf("     >   \\    /\n");
-  printf("    (_,-'`> .'\n");
-  printf("      (_,'\n");
+void pr_pikachu(int x,int y) {
+    screenGotoxy(x, y);
+    printf(";-.          ___,\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("  `.`\\_...._/`.-\"`\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("    \\       /      ,\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("    /()   () \\    .' `-._\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("   |)  .    ()\\  /   _.'\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("   \\  -'-     ,; '. <\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("    ;.__     ,;|   > \\\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("   / ,    / ,  |.-'.-'\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("  (_/    (_/ ,;|.<`\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("    \\    ,     ;-`\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("     >   \\    /\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("    (_,-'`> .'\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("      (_,'\n");
+}
+void pr_charmander(int x, int y) {
+    screenGotoxy(x, y);
+    printf("⠀⠀⣀⠔⠒⠒⠂⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⢰⢅⠀⠀⢀⣤⢄⢂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⣾⡆⠀⠀⠀⢸⠼⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⢀⢗⠂⠀⠀⡀⠈⢉⠅⠇⠀⠀⠀⠀⠀⠀⢠⣄⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠈⠢⣓⠔⣲⠖⡫⠊⡘⠀⠀⠀⠀⠀⠀⠲⡟⠙⡆\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⢀⢀⠠⠘⣇⠖⢄⠀⠉⠐⠠⢄⣀⡀⠀⠜⠀⠀⣁\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠘⣏⣀⣀⣀⠃⠀⠀⠑⣀⣀⣀⣰⠼⠇⠈⠄⠀⠈⡻\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠁⠀⠀⢰⠀⠀⠀⠀⠠⠀⠡⡀⠀⠀⠀⠈⡖⠚⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠀⡠⠘⠀⠀⠀⠀⢀⠆⠀⠐⡀⠀⡠⠊⣠⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⢐⠀⠀⠁⡀⠀⠀⢀⠀⠀⠀⢨⠀⡠⡴⠂⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⢀⣨⣤⠀⠀⠐⠃⠐⠚⠢⠀⠀⠈⠑⠊⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠘⠓⠋⠉⠁⠀⠀⠀⠀⠀⠓⢶⡾⠗⠀⠀⠀⠀⠀\n");
+}
+
+void pr_squirtle(int x, int y) {
+    screenGotoxy(x, y);
+    printf("⠀⠀⠀⠀⠀⣀⠤⠤⠤⠤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⡰⠋⠀⠀⠀⠀⠀⠀⠡⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⢠⠁⢰⣴⠀⠀⠀⠀⣿⡇⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⢀⣸⠀⠈⠙⠃⣀⣀⡀⣤⡄⢸⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⢰⠃⠉⠁⠂⢦⣀⢀⡀⠤⠤⣥⣌⡀⠀⠈⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠘⠦⡀⠀⠀⠀⠈⡄⠂⠉⠀⣀⠵⢵⡒⠠⢴⡋⠉⢑⠖⠦⢄⠀⠀⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠈⠲⢤⣤⣴⡥⢄⡨⠋⠀⠒⢄⡑⣄⠀⠈⠄⠀⠀⠀⠈⡝⢀⣀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠀⠀⠈⢿⣿⣿⣆⡇⠀⠀⠊⠉⠉⡆⠈⠢⣶⣀⡀⢀⡰⠋⠀⠀⠉⠑⡄\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠀⠀⠀⠀⢿⣿⣿⣔⠀⠠⡀⠀⢀⡇⠀⠀⠠⣇⠈⢹⠀⠀⡀⠀⠀⠀⠘⡄\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠀⠀⠀⠀⠀⠙⠛⢿⣿⣿⣿⣿⣶⣶⢆⠀⠀⠈⠉⠈⢄⠀⠀⠀⠂⠀⢀⠇\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠁⠀⠀⠑⠦⣄⠀⠀⠀⠁⠀⠈⠀⢀⠎⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠓⠒⠲⠖⠒⠊⠁⠀⠀\n");
+}
+
+void pr_bulbasour(int x, int y) {
+    screenGotoxy(x, y);
+    printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⡀⠈⡖⡤⠄⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⢀⡀⠀⠀⠀⡐⠁⠀⠀⠠⠐⠂⠀⠁⠀⠀⠀⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠰⡁⠐⢉⣉⣭⡍⠁⠂⠉⠘⡀⠀⠀⠀⠀⠂⠡⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⢀⣊⠀⡄⠻⠿⠋⠀⠀⠀⠀⠀⢃⠀⠀⠀⠀⠀⠀⢀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⡎⣾⠀⠁⣴⡆⠀⠡⢺⣿⣆⠀⢠⢱⣄⠀⠀⠀⠀⠈\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⡑⠟⠀⠀⠀⠀⠀⢀⣸⡿⠟⠀⠀⠈⢿⣿⡦⡀⠀⡰\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠙⠔⠦⣤⣥⣤⣤⣤⡤⠆⠀⠀⠀⠀⢀⢀⠀⠈⠎⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠈⣰⡋⢉⠉⠁⠒⠂⢇⢠⡆⠀⠸⢴⣿⠀⠘⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠘⡿⠃⠀⠨⠒⢆⣸⣿⠁⠀⡠⡇⠈⠋⠀⠰⠀\n");
+    y = y + 1;
+    screenGotoxy(x, y);
+    printf("⠀⠀⠀⠛⠒⠒⠁⠀⠈⠷⡤⠤⠐⠀⠘⠒⠒⠖⠁⠀\n");
 }
 
 Pokemon choice1 = {"Charmander", "Fire", 100, 15, 20, 10, 10, 25, "Grass"};
@@ -406,24 +524,59 @@ void updatePlayerStats(PlayerStats *winner) {
   }
 }
 
+int comparePlayerStats(const void *a, const void *b) {
+    return ((PlayerStats*)b)->victories - ((PlayerStats*)a)->victories;
+}
+
 void loadPlayerStats() {
-  FILE *file = fopen("player_stats.dat", "r");
+    int i = 6;
+    int j = 0;
+    int count = 0;
+    char escolha;
+    screenSetColor(RED, BLACK);
+    screenClear();
 
-  if (file == NULL) {
-    fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
-    exit(1);
-  }
+    screenInit(0);
+    FILE *file = fopen("player_stats.dat", "r");
 
-  PlayerStats playerStats;
+    if (file == NULL) {
+        fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
+        exit(1);
+    }
 
-  printf("\nEstatísticas de Jogadores:\n");
+    PlayerStats playerStatsArray[10]; // Assumindo que você deseja exibir até 10 jogadores
+    PlayerStats playerStats;
 
-  while (fread(&playerStats, sizeof(PlayerStats), 1, file) == 1) {
-    printf("Jogador: %s | Vitórias: %d\n", playerStats.playerName,
-           playerStats.victories);
-  }
+    screenGotoxy(5, 4);
+    printf("\n\tMelhores treinadores pokemon:\n");
 
-  fclose(file);
+    // Ler as estatísticas dos jogadores para o array
+    while (fread(&playerStats, sizeof(PlayerStats), 1, file) == 1 && count <= 9) {
+        if (playerStats.victories > 0) {
+            strcpy(playerStatsArray[count].playerName, playerStats.playerName);
+            playerStatsArray[count].victories = playerStats.victories;
+            count += 1;
+        }
+    }
+
+    // Ordenar o array de estatísticas dos jogadores
+    qsort(playerStatsArray, count, sizeof(PlayerStats), comparePlayerStats);
+
+    // Exibir as estatísticas dos jogadores ordenadas
+    for (int k = 0; k < count; k++) {
+        screenGotoxy(5, i);
+        printf("Jogador: %s | Vitórias: %d\n", playerStatsArray[k].playerName, playerStatsArray[k].victories);
+        i += 1;
+    }
+
+    printf("\n\tJogar novamente? (S/N)\n");
+    scanf(" %c", &escolha);  // Corrigido para lidar com espaços em branco
+
+    if (escolha == 's' || escolha == 'S') {
+        fclose(file);
+    }else{
+      exit(1);
+    }
 }
 
 void getPlayerName(char *name, int playerNumber) {
@@ -548,122 +701,112 @@ void drawGameOverScreen(Player *currentPlayer, Player *opponent,
   printf("Deseja jogar novamente? (S/N)");
   screenUpdate();
 
+  screenGotoxy(5, 12);
+  printf("Pressione 'V' para ver o placar");
+  screenUpdate();
+
   char playAgainResponse;
   do {
     if (keyhit()) {
       playAgainResponse = readch();
     }
   } while (playAgainResponse != 'S' && playAgainResponse != 's' &&
-           playAgainResponse != 'N' && playAgainResponse != 'n');
+           playAgainResponse != 'N' && playAgainResponse != 'n' &&
+          playAgainResponse != 'V' && playAgainResponse != 'v');
 
   if (playAgainResponse == 'S' || playAgainResponse == 's') {
     *playAgain = 1;
-  } else {
+  } else if (playAgainResponse == 'N' || playAgainResponse == 'n') {
     *playAgain = 0;
+  }else{
+    loadPlayerStats();
   }
 
-  // Modificação para exibir o placar
-  screenGotoxy(5, 12);
-  printf("Pressione 'V' para ver o placar");
-  screenUpdate();
 
-  int keyPressed = 0;
-  while (!keyPressed) {
-    if (keyhit()) {
-      char viewScoreboard = readch();
-      if (viewScoreboard == 'V' || viewScoreboard == 'v') {
-        loadPlayerStats(); // Exibe estatísticas após cada jogo
-      }
-      keyPressed = 1;
-    }
-  }
+
 }
 
-void drawBattleScreen(Player *currentPlayer, Player *opponent) {
+void drawBattleScreen(Player *currentPlayer, Player *opponent,bool hit) {
   // Clear the screen and set text and background colors
   screenSetColor(WHITE, BLACK);
 
+
   // Draw the screen borders
   screenInit(2);
-
+  if (strcmp(currentPlayer->pokemon.name, "Pikachu") == 0) {
+    
+    if(hit){
+      screenGotoxy(6, 6);
+      pr_pikachu(6, 6);
+    }else{
+      screenGotoxy(5, 5);
+      pr_pikachu(5, 5);
+    }
+  }
+  
+  if (strcmp(currentPlayer->pokemon.name, "Charmander") == 0){
+    
+    if(hit){
+      screenGotoxy(6, 6);
+      pr_charmander(6, 6);
+    }else{
+      screenGotoxy(5, 5);
+      pr_charmander(5, 5);
+    }
+  }
+  
+  if(strcmp(currentPlayer->pokemon.name,"Bulbasaur") == 0){
+    
+    if(hit){
+      screenGotoxy(6, 6);
+      pr_bulbasour(6, 6);
+    }else{
+      screenGotoxy(5, 5);
+      pr_bulbasour(5, 5);
+    }
+  }
+  
+  if(strcmp(currentPlayer->pokemon.name,"Squirtle") == 0){
+    
+    if(hit){
+      screenGotoxy(6, 6);
+      pr_squirtle(6, 6);
+    }else{
+      screenGotoxy(5, 5);
+      pr_squirtle(5, 5);
+      
+    }
+  }
   // Draw the battlefield
-  screenGotoxy(5, 5);
+  screenGotoxy(40, 5);
   printf("BATALHA POKÉMON");
   // Draw Pokémon and their information for the current player
-  screenGotoxy(5, 8);
-  printf("%s: %s - Vida: %d", currentPlayer->playerName,
+  screenGotoxy(40, 8);
+  printf("%s: %s - Vida: %d/100", currentPlayer->playerName,
          currentPlayer->pokemon.name, currentPlayer->pokemon.health);
 
   // Draw Pokémon and their information for the opponent
-  screenGotoxy(5, 10);
-  printf("%s: %s - Vida: %d", opponent->playerName, opponent->pokemon.name,
+  screenGotoxy(40, 10);
+  printf("%s: %s - Vida: %d/100", opponent->playerName, opponent->pokemon.name,
          opponent->pokemon.health);
 
   // Draw the attack menu
-  screenGotoxy(5, 15);
+  screenGotoxy(40, 15);
   printf("Escolha um ataque %s:", currentPlayer->playerName);
-  screenGotoxy(5, 17);
+  screenGotoxy(40, 17);
   printf("[1] %d", currentPlayer->pokemon.attack1);
-  screenGotoxy(5, 18);
+  screenGotoxy(40, 18);
   printf("[2] %d", currentPlayer->pokemon.attack2);
-  screenGotoxy(5, 19);
+  screenGotoxy(40, 19);
   printf("[3] %d", currentPlayer->pokemon.attack3);
-  screenGotoxy(5, 20);
+  screenGotoxy(40, 20);
   printf("[4] %d", currentPlayer->pokemon.attack4);
 
   // Update the screen immediately after drawing
   screenUpdate();
 }
 
-/**
-void charmander() {
-    printf("⠀⠀⣀⠔⠒⠒⠂⢄⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-    printf("⠀⠀⢰⢅⠀⠀⢀⣤⢄⢂⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-    printf("⠀⠀⣾⡆⠀⠀⠀⢸⠼⡎⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-    printf("⠀⢀⢗⠂⠀⠀⡀⠈⢉⠅⠇⠀⠀⠀⠀⠀⠀⢠⣄⠀\n");
-    printf("⠀⠈⠢⣓⠔⣲⠖⡫⠊⡘⠀⠀⠀⠀⠀⠀⠲⡟⠙⡆\n");
-    printf("⠀⢀⢀⠠⠘⣇⠖⢄⠀⠉⠐⠠⢄⣀⡀⠀⠜⠀⠀⣁\n");
-    printf("⠘⣏⣀⣀⣀⠃⠀⠀⠑⣀⣀⣀⣰⠼⠇⠈⠄⠀⠈⡻\n");
-    printf("⠀⠁⠀⠀⢰⠀⠀⠀⠀⠠⠀⠡⡀⠀⠀⠀⠈⡖⠚⠀\n");
-    printf("⠀⠀⠀⡠⠘⠀⠀⠀⠀⢀⠆⠀⠐⡀⠀⡠⠊⣠⠀⠀\n");
-    printf("⠀⠀⢐⠀⠀⠁⡀⠀⠀⢀⠀⠀⠀⢨⠀⡠⡴⠂⠀⠀\n");
-    printf("⠀⢀⣨⣤⠀⠀⠐⠃⠐⠚⠢⠀⠀⠈⠑⠊⠀⠀⠀⠀\n");
-    printf("⠀⠘⠓⠋⠉⠁⠀⠀⠀⠀⠀⠓⢶⡾⠗⠀⠀⠀⠀⠀\n");
 
-}
-
-void squirtle() {
-    printf("⠀⠀⠀⠀⠀⣀⠤⠤⠤⠤⣀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-    printf("⠀⠀⡰⠋⠀⠀⠀⠀⠀⠀⠡⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-    printf("⠀⢠⠁⢰⣴⠀⠀⠀⠀⣿⡇⢇⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-    printf("⢀⣸⠀⠈⠙⠃⣀⣀⡀⣤⡄⢸⣀⣀⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-    printf("⢰⠃⠉⠁⠂⢦⣀⢀⡀⠤⠤⣥⣌⡀⠀⠈⠱⡀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀\n");
-    printf("⠘⠦⡀⠀⠀⠀⠈⡄⠂⠉⠀⣀⠵⢵⡒⠠⢴⡋⠉⢑⠖⠦⢄⠀⠀⠀⠀⠀⠀\n");
-    printf("⠀⠀⠈⠲⢤⣤⣴⡥⢄⡨⠋⠀⠒⢄⡑⣄⠀⠈⠄⠀⠀⠀⠈⡝⢀⣀⠀⠀⠀\n");
-    printf("⠀⠀⠀⠀⠈⢿⣿⣿⣆⡇⠀⠀⠊⠉⠉⡆⠈⠢⣶⣀⡀⢀⡰⠋⠀⠀⠉⠑⡄\n");
-    printf("⠀⠀⠀⠀⠀⠀⢿⣿⣿⣔⠀⠠⡀⠀⢀⡇⠀⠀⠠⣇⠈⢹⠀⠀⡀⠀⠀⠀⠘⡄\n");
-    printf("⠀⠀⠀⠀⠀⠀⠀⠙⠛⢿⣿⣿⣿⣿⣶⣶⢆⠀⠀⠈⠉⠈⢄⠀⠀⠀⠂⠀⢀⠇\n");
-    printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠈⠉⠉⠉⠁⠀⠀⠑⠦⣄⠀⠀⠀⠁⠀⠈⠀⢀⠎⠀\n");
-    printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠀⠉⠓⠒⠲⠖⠒⠊⠁⠀⠀\n");
-
-}
-
-
-void bulbasour() {
-    printf("⠀⠀⠀⠀⠀⠀⠀⠀⠀⣀⣀⣀⣀⣀⡀⠈⡖⡤⠄⠀\n");
-    printf("⠀⠀⢀⡀⠀⠀⠀⡐⠁⠀⠀⠠⠐⠂⠀⠁⠀⠀⠀⠀\n");
-    printf("⠀⠰⡁⠐⢉⣉⣭⡍⠁⠂⠉⠘⡀⠀⠀⠀⠀⠂⠡⠀\n");
-    printf("⢀⣊⠀⡄⠻⠿⠋⠀⠀⠀⠀⠀⢃⠀⠀⠀⠀⠀⠀⢀\n");
-    printf("⡎⣾⠀⠁⣴⡆⠀⠡⢺⣿⣆⠀⢠⢱⣄⠀⠀⠀⠀⠈\n");
-    printf("⡑⠟⠀⠀⠀⠀⠀⢀⣸⡿⠟⠀⠀⠈⢿⣿⡦⡀⠀⡰\n");
-    printf("⠙⠔⠦⣤⣥⣤⣤⣤⡤⠆⠀⠀⠀⠀⢀⢀⠀⠈⠎⠀\n");
-    printf("⠀⠀⠈⣰⡋⢉⠉⠁⠒⠂⢇⢠⡆⠀⠸⢴⣿⠀⠘⠀\n");
-    printf("⠀⠀⠘⡿⠃⠀⠨⠒⢆⣸⣿⠁⠀⡠⡇⠈⠋⠀⠰⠀\n");
-    printf("⠀⠀⠀⠛⠒⠒⠁⠀⠈⠷⡤⠤⠐⠀⠘⠒⠒⠖⠁⠀\n");
-
-}
-
-*/
 
 int main() {
   int playAgain = 1;
@@ -692,14 +835,22 @@ int main() {
     Player *opponent = &player2;
 
     while (!gameOver) {
-      drawBattleScreen(currentPlayer, opponent);
+      drawBattleScreen(currentPlayer, opponent, False);
 
       int keyPressed = 0;
+      int animationkey = 0;
       while (!keyPressed) {
         if (keyhit()) {
           int key = readch();
           processPlayerInput(key, currentPlayer, opponent);
-          keyPressed = 1;
+          animationkey = 1;
+          if(animationkey){
+            drawBattleScreen(currentPlayer, opponent, True);
+            usleep(0700000);
+            drawBattleScreen(currentPlayer, opponent, False);
+            usleep(0700000);
+            keyPressed = 1;
+          }
         }
 
         if (timerTimeOver()) {
@@ -734,10 +885,10 @@ int main() {
         savePlayerStats(
             &(PlayerStats){.playerName = winner->playerName, .victories = 0});
         updatePlayerStats(winner); // Atualizar estatísticas
-        loadPlayerStats();         // Exibir estatísticas após cada jogo
 
         // Desenha a tela de game over
         drawGameOverScreen(winner, opponent, &playAgain);
+                // Exibir estatísticas após cada jogo
       }
     }
 
