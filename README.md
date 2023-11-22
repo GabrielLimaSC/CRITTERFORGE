@@ -4,7 +4,7 @@
 
 CRITTERFORGE é um emocionante jogo desenvolvido em linguagem C, onde dois jogadores têm a oportunidade de escolher entre 4 criaturas místicas para travar batalhas épicas e determinar quem alcançará o melhor score no final. Inspirado no universo Pokémon, o jogo é projetado para ser jogado em turnos, proporcionando uma experiência estratégica e divertida.
 
-**Como Jogar:**
+**Saiba mais:**
 
 1. **Escolha do Pokémon:**
    - Inicie o jogo escolhendo o seu Pokémon entre as 4 opções disponíveis. Cada criatura tem suas próprias habilidades e estatísticas únicas, então escolha sabiamente.
