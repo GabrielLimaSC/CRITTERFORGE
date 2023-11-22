@@ -1,282 +1,3 @@
-/**
- * screen.h
- * Created on Aug, 23th 2023
- * Author: Tiago Barros
- * Based on "From C to C++ course - 2002"
- * Reference: https://en.wikipedia.org/wiki/ANSI_escape_code
-
-
-#ifndef __SCREEN_H__
-#define __SCREEN_H__
-
-#include <stdio.h>
-
-// Terminal control sequences
-#define ESC            "\033"
-#define NORMALTEXT     "[0m"
-#define BOLDTEXT       "[1m"
-#define ITALICTEXT     "[3m"
-#define BLINKTEXT      "[5m"
-#define REVERSETEXT    "[7m"
-#define HOMECURSOR     "[f"
-#define SHOWCURSOR     "[?25h"
-#define HIDECURSOR     "[?25l"
-#define CLEARSCREEN    "[2J"
-
-// BOX Drawing - Unix like terminals
-#define BOX_ENABLE     "(0"
-#define BOX_DISABLE    "(B"
-#define BOX_VLINE      0x78
-#define BOX_HLINE      0x71
-#define BOX_UPLEFT     0x6C
-#define BOX_UPRIGHT    0x6B
-#define BOX_DWNLEFT    0x6D
-#define BOX_DWNRIGHT   0x6A
-#define BOX_CROSS      0x6E
-#define BOX_TLEFT      0X74
-#define BOX_TRIGHT     0X75
-#define BOX_TUP        0X77
-#define BOX_TDOWN      0X76
-
-#define BOX_DIAMOND    0x60
-#define BOX_BLOCK      0x61
-#define BOX_DOT        0x7E
-
-// screen constants
-#define SCRSTARTX      3      // Initial and final screen positions for the game
-#define SCRENDX        75     // It means the area that can be drawn
-#define SCRSTARTY      1
-#define SCRENDY        23
-
-#define MINX           1      // min screen horizontal pos
-#define MINY           1      // min screen vertical pos
-#define MAXX           80     // max screen horizontal pos
-#define MAXY           24     // max screen vertical pos
-
- * Screen Colors type
-
-typedef enum {BLACK, RED, GREEN, BROWN, BLUE, MAGENTA, CYAN, LIGHTGRAY,
-        DARKGRAY, LIGHTRED, LIGHTGREEN, YELLOW, LIGHTBLUE,
-        LIGHTMAGENTA, LIGHTCYAN, WHITE} screenColor;
-
-
-
- * Move the cursor to position (0,0)
-
-static inline void screenHomeCursor()
-{
-    printf("%s%s", ESC, HOMECURSOR);
-}
-
- * Show the cursor
-
-static inline void screenShowCursor()
-{
-    printf("%s%s", ESC, SHOWCURSOR);
-}
-
- * Hide the cursor
-
-static inline void screenHideCursor()
-{
-    printf("%s%s", ESC, HIDECURSOR);
-}
-
- * Clear the screen
-
-static inline void screenClear()
-{
-    screenHomeCursor();
-    printf("%s%s", ESC, CLEARSCREEN);
-}
-
- * Update screen imediatelly
-
-static inline void screenUpdate() {
-    fflush(stdout);
-}
-
- * Set screen mode to "normal"
-
-static inline void screenSetNormal()
-{
-    printf("%s%s", ESC, NORMALTEXT);
-}
-
- * Set screen mode to "bold"
-
-static inline void screenSetBold()
-{
-    printf("%s%s", ESC, BOLDTEXT);
-}
-
- * Set screen mode to "blink"
-
-static inline void screenSetBlink()
-{
-    printf("%s%s", ESC, BLINKTEXT);
-}
-
- * Set screen mode to "reverse"
-
-static inline void screenSetReverse()
-{
-    printf("%s%s", ESC, REVERSETEXT);
-}
-
- * Enable BOX characters in terminal
-
-static inline void screenBoxEnable()
-{
-    printf("%s%s", ESC, BOX_ENABLE);
-}
-
- * Disable BOX characters in terminal
-
-static inline void screenBoxDisable()
-{
-    printf("%s%s", ESC, BOX_DISABLE);
-}
-
- * Clear the screen, set cursor to home position
- * and optionally draw borders on it.
- *
- * @param drawBorders if not zero, draw borders on screen.
-
-void screenInit(int drawBorders);
-
- * Clear the screen and restores to initial state.
-
-void screenDestroy();
-
- * Move cursor to position (x,y)
- * @param x x position
- * @param y y position
-
-
-void screenGotoxy(int x, int y);
-
- * Define text colors
- * @param fg foreground color, can assume values from BLACK to WHITE
- * @param bg background color, can assume values from BLACK to LIGHTGRAY
-
-void screenSetColor(screenColor fg, screenColor bg);
-
-#endif  __SCREEN_H__
-
-*/
-
-/**
- * timer.h
- * Created on Aug, 23th 2023
- * Author: Tiago Barros
- * Based on "From C to C++ course - 2002"
-
-
-void timerInit(int valueMilliSec);
-
-void timerDestroy();
-
-void timerUpdateTimer(int valueMilliSec);
-
-int timerTimeOver();
-
-void timerPrint();
-
-*/
-
-/**
- * keyboard.h
- * Created on Aug, 23th 2023
- * Author: Tiago Barros
- * Based on "From C to C++ course - 2002"
-
-
-#ifndef __KEYBOARD_H__
-#define __KEYBOARD_H__
-
-void keyboardInit();
-
-void keyboardDestroy();
-
-int keyhit();
-
-int readch();
-
-#endif  __KEYBOARD_H__
-*/
-
-/**
- screen.h -
-
-    void screenInit(int drawBorders); -
-
-    Esta função inicializa a tela, O parâmetro drawBorders pode ser usado para
- desenhar para desenhar as bordas da tela. Se drawBorders for diferente de zero,
- as bordas serão desenhadas.
-
-    void screenDestroy(); -
-
-    Esta função limpa a tela e restaura o estado inicial.
-
-    void screenGotoxy(int x, int y); -
-
-    Esta função move o cursor para a posição (x,y).
-
-    void screenSetColor(screenColor fg, screenColor bg); -
-
-    Esta função define as cores do texto.
-    O parâmetro fg define a cor do texto e o parâmetro bg define a cor do fundo.
-
- timer.h -
-
-    void timerInit(int valueMilliSec); -
-
-    Esta função inicializa o timer. O parâmetro valueMilliSec define o tempo em
- milisegundos.
-
-    void timerDestroy(); -
-
-    Esta função desativa o timer.
-
-    void timerUpdateTimer(int valueMilliSec); -
-
-    Esta função atualiza o timer. O parâmetro valueMilliSec define o tempo em
- milisegundos.
-
-    int timerTimeOver(); -
-
-    Esta função retorna 1 se o tempo definido pelo timer tiver expirado.
-    Caso contrário, retorna 0.
-
-    void timerPrint(); -
-
-    Esta função imprime o tempo decorrido desde a última chamada da função
- timerInit().
-
- keyboard.h -
-
-    void keyboardInit(); -
-
-    Esta função inicializa o teclado.
-
-    void keyboardDestroy(); -
-
-    Esta função desativa o teclado.
-
-    int keyhit(); -
-
-    Esta função retorna 1 se uma tecla foi pressionada.
-    Caso contrário, retorna 0.
-
-    int readch(); -
-
-    Esta função retorna o código da tecla pressionada.
-    Se nenhuma tecla foi pressionada, retorna -1.
-
-*/
-
-
 #include "keyboard.h"
 #include "screen.h"
 #include "timer.h"
@@ -300,6 +21,54 @@ typedef struct {
   int criticalattack;
   char criticaltype[10];
 } Pokemon;
+
+typedef struct {
+    char playerName[20];
+    int victories;
+} PlayerStats;
+
+typedef struct Node {
+    PlayerStats data;
+    struct Node* next;
+} Node;
+
+Node* createNode(PlayerStats stats) {
+    Node* newNode = (Node*)malloc(sizeof(Node));
+    if (newNode != NULL) {
+        newNode->data = stats;
+        newNode->next = NULL;
+    }
+    return newNode;
+}
+
+void insertNode(Node** head, PlayerStats stats) {
+    Node* newNode = createNode(stats);
+    if (newNode == NULL) {
+        fprintf(stderr, "Erro ao alocar memória para o nó.\n");
+        exit(1);
+    }
+
+    if (*head == NULL) {
+        *head = newNode;
+    } else {
+        Node* current = *head;
+        while (current->next != NULL) {
+            current = current->next;
+        }
+        current->next = newNode;
+    }
+}
+
+void freeList(Node* head) {
+    Node* current = head;
+    while (current != NULL) {
+        Node* next = current->next;
+        free(current);
+        current = next;
+    }
+}
+
+
 
 void pr_pikachu(int x,int y) {
     screenGotoxy(x, y);
@@ -459,23 +228,18 @@ typedef struct {
   Pokemon pokemon;
 } Player;
 
-Player player1; // Chosen by player 1
-Player player2; // Chosen by player 2
-
-typedef struct {
-  char playerName[20];
-  int victories;
-} PlayerStats;
+Player player1; 
+Player player2; 
 
 void savePlayerStats(PlayerStats *winner) {
   FILE *file = fopen("player_stats.dat", "a");
 
   if (file == NULL) {
-    // Se o arquivo não existir, cria um novo
+
     file = fopen("player_stats.dat", "w");
     if (file == NULL) {
       fprintf(stderr, "Erro ao criar o arquivo de estatísticas.\n");
-      exit(1);
+      exit(0);
     }
   }
 
@@ -488,7 +252,7 @@ void updatePlayerStats(PlayerStats *winner) {
 
   if (file == NULL) {
     fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
-    exit(1);
+    exit(0);
   }
 
   PlayerStats playerStats;
@@ -507,16 +271,16 @@ void updatePlayerStats(PlayerStats *winner) {
   fclose(file);
 
   if (!found) {
-    // Se o jogador não existir nas estatísticas, adiciona um novo registro
+  
     playerStats.victories = 1;
     strncpy(playerStats.playerName, winner->playerName,
             sizeof(playerStats.playerName));
 
-    // Reabre o arquivo para escrever o novo registro
+
     file = fopen("player_stats.dat", "a");
     if (file == NULL) {
       fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
-      exit(1);
+      exit(0);
     }
 
     fwrite(&playerStats, sizeof(playerStats), 1, file);
@@ -529,56 +293,50 @@ int comparePlayerStats(const void *a, const void *b) {
 }
 
 void loadPlayerStats() {
-    int i = 6;
-    int j = 0;
-    int count = 0;
     char escolha;
     screenSetColor(RED, BLACK);
     screenClear();
-
     screenInit(0);
-    FILE *file = fopen("player_stats.dat", "r");
 
+    FILE* file = fopen("player_stats.dat", "r");  
     if (file == NULL) {
         fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
         exit(1);
     }
 
-    PlayerStats playerStatsArray[10]; // Assumindo que você deseja exibir até 10 jogadores
+    Node* statsList = NULL; 
+
     PlayerStats playerStats;
-
-    screenGotoxy(5, 4);
-    printf("\n\tMelhores treinadores pokemon:\n");
-
-    // Ler as estatísticas dos jogadores para o array
-    while (fread(&playerStats, sizeof(PlayerStats), 1, file) == 1 && count <= 9) {
+    while (fread(&playerStats, sizeof(PlayerStats), 1, file) == 1) {
         if (playerStats.victories > 0) {
-            strcpy(playerStatsArray[count].playerName, playerStats.playerName);
-            playerStatsArray[count].victories = playerStats.victories;
-            count += 1;
+            insertNode(&statsList, playerStats);
         }
     }
 
-    // Ordenar o array de estatísticas dos jogadores
-    qsort(playerStatsArray, count, sizeof(PlayerStats), comparePlayerStats);
+    fclose(file);
 
-    // Exibir as estatísticas dos jogadores ordenadas
-    for (int k = 0; k < count; k++) {
-        screenGotoxy(5, i);
-        printf("Jogador: %s | Vitórias: %d\n", playerStatsArray[k].playerName, playerStatsArray[k].victories);
+    
+    int i = 6;
+    screenGotoxy(12, 4);
+    printf("\n\tMelhores treinadores Pokemon:\n");
+
+    Node* current = statsList;
+    while (current != NULL) {
+        screenGotoxy(6, i);
+        printf("Jogador: %-11s | Vitórias: %d\n", current->data.playerName, current->data.victories);
         i += 1;
+        current = current->next;
     }
+
+    freeList(statsList);
 
     printf("\n\tJogar novamente? (S/N)\n");
-    scanf(" %c", &escolha);  // Corrigido para lidar com espaços em branco
+    scanf(" %c", &escolha);
 
-    if (escolha == 's' || escolha == 'S') {
-        fclose(file);
-    }else{
-      exit(1);
+    if (escolha != 's' && escolha != 'S') {
+        exit(0);
     }
 }
-
 void getPlayerName(char *name, int playerNumber) {
   screenSetColor(WHITE, BLACK);
   screenClear();
@@ -591,16 +349,14 @@ void getPlayerName(char *name, int playerNumber) {
   int index = 0;
   char inputChar;
 
-  // Modificação aqui - ler os caracteres diretamente com getchar
+
   while (1) {
     inputChar = getchar();
     if (inputChar == '\n' || index >= 19) {
       break;
     }
     name[index++] = inputChar;
-    name[index] = '\0'; // Garante que a string esteja sempre terminada
-
-    // Atualiza a tela com o nome digitado
+    name[index] = '\0'; 
     screenGotoxy(5, 7);
     printf("Nome: %s               ", name);
     screenGotoxy(5, 7);
@@ -630,7 +386,7 @@ int choosePokemon(Player *player) {
 
   screenUpdate();
 
-  // Wait for player input
+
   while (1) {
     if (keyhit()) {
       int key = readch();
@@ -655,7 +411,7 @@ int choosePokemon(Player *player) {
 }
 
 void processPlayerInput(int key, Player *attacker, Player *defender) {
-  // Logic to process player input
+  
   switch (key) {
   case '1':
     if (strcmp(attacker->pokemon.criticaltype, defender->pokemon.type) == 0) {
@@ -717,7 +473,7 @@ void drawGameOverScreen(Player *currentPlayer, Player *opponent,
   if (playAgainResponse == 'S' || playAgainResponse == 's') {
     *playAgain = 1;
   } else if (playAgainResponse == 'N' || playAgainResponse == 'n') {
-    *playAgain = 0;
+    exit(0);
   }else{
     loadPlayerStats();
   }
@@ -727,14 +483,13 @@ void drawGameOverScreen(Player *currentPlayer, Player *opponent,
 }
 
 void drawBattleScreen(Player *currentPlayer, Player *opponent,bool hit) {
-  // Clear the screen and set text and background colors
+
   screenSetColor(WHITE, BLACK);
 
 
-  // Draw the screen borders
   screenInit(2);
   if (strcmp(currentPlayer->pokemon.name, "Pikachu") == 0) {
-    
+
     if(hit){
       screenGotoxy(6, 6);
       pr_pikachu(6, 6);
@@ -743,9 +498,9 @@ void drawBattleScreen(Player *currentPlayer, Player *opponent,bool hit) {
       pr_pikachu(5, 5);
     }
   }
-  
+
   if (strcmp(currentPlayer->pokemon.name, "Charmander") == 0){
-    
+
     if(hit){
       screenGotoxy(6, 6);
       pr_charmander(6, 6);
@@ -754,9 +509,9 @@ void drawBattleScreen(Player *currentPlayer, Player *opponent,bool hit) {
       pr_charmander(5, 5);
     }
   }
-  
+
   if(strcmp(currentPlayer->pokemon.name,"Bulbasaur") == 0){
-    
+
     if(hit){
       screenGotoxy(6, 6);
       pr_bulbasour(6, 6);
@@ -765,32 +520,32 @@ void drawBattleScreen(Player *currentPlayer, Player *opponent,bool hit) {
       pr_bulbasour(5, 5);
     }
   }
-  
+
   if(strcmp(currentPlayer->pokemon.name,"Squirtle") == 0){
-    
+
     if(hit){
       screenGotoxy(6, 6);
       pr_squirtle(6, 6);
     }else{
       screenGotoxy(5, 5);
       pr_squirtle(5, 5);
-      
+
     }
   }
-  // Draw the battlefield
+
   screenGotoxy(40, 5);
   printf("BATALHA POKÉMON");
-  // Draw Pokémon and their information for the current player
+
   screenGotoxy(40, 8);
   printf("%s: %s - Vida: %d/100", currentPlayer->playerName,
          currentPlayer->pokemon.name, currentPlayer->pokemon.health);
 
-  // Draw Pokémon and their information for the opponent
+
   screenGotoxy(40, 10);
   printf("%s: %s - Vida: %d/100", opponent->playerName, opponent->pokemon.name,
          opponent->pokemon.health);
 
-  // Draw the attack menu
+
   screenGotoxy(40, 15);
   printf("Escolha um ataque %s:", currentPlayer->playerName);
   screenGotoxy(40, 17);
@@ -802,7 +557,6 @@ void drawBattleScreen(Player *currentPlayer, Player *opponent,bool hit) {
   screenGotoxy(40, 20);
   printf("[4] %d", currentPlayer->pokemon.attack4);
 
-  // Update the screen immediately after drawing
   screenUpdate();
 }
 
@@ -823,11 +577,11 @@ int main() {
     getPlayerName(player2.playerName, 2);
 
     while (!choosePokemon(&player1)) {
-      // Continua solicitando até que uma escolha válida seja feita
+
     }
 
     while (!choosePokemon(&player2)) {
-      // Continua solicitando até que uma escolha válida seja feita
+
     }
 
     int gameOver = 0;
@@ -854,11 +608,7 @@ int main() {
         }
 
         if (timerTimeOver()) {
-          // Lógica para atualizar a tela durante a batalha
-          // (por exemplo, animações, atualizações de estado, etc.)
-          // ...
 
-          // Atualiza a tela imediatamente após as alterações
           screenUpdate();
         }
       }
@@ -881,21 +631,21 @@ int main() {
           winner = &player1;
         }
 
-        // Salva as estatísticas do vencedor
+
         savePlayerStats(
             &(PlayerStats){.playerName = winner->playerName, .victories = 0});
-        updatePlayerStats(winner); // Atualizar estatísticas
+        updatePlayerStats(winner);
 
-        // Desenha a tela de game over
+
         drawGameOverScreen(winner, opponent, &playAgain);
-                // Exibir estatísticas após cada jogo
+
       }
     }
 
     keyboardDestroy();
     screenDestroy();
     timerDestroy();
-  }
 
+  }
   return 0;
 }
