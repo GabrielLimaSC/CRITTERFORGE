@@ -85,9 +85,6 @@ Você pode jogar CRITTERFORGE facilmente clonando o repositório em sua máquina
 10. **`drawBattleScreen`:**
     - Desenha a tela de batalha, mostrando a representação gráfica dos Pokémon, informações sobre a batalha e as opções de ataque disponíveis.
 
-11. **`main`:**
-    - Função principal do jogo. Inicia o loop principal do jogo, onde os jogadores escolhem seus Pokémon, batalham e o resultado é mostrado. Também gerencia o ciclo de jogo, incluindo as funções de inicialização e destruição dos recursos do jogo.
-
 
 
 
