@@ -17,26 +17,12 @@ CRITTERFORGE é um emocionante jogo desenvolvido em linguagem C, onde dois jogad
 
 **Como Rodar o Jogo:**
 
-Você pode jogar CRITTERFORGE facilmente clonando o repositório em sua máquina local usando o Git ou executando diretamente no Replit.
+Você pode jogar CRITTERFORGE facilmente fazendo um fork e executando diretamente no Replit.
 
-- **Clonando o Repositório:**
-  1. Abra seu terminal e digite o seguinte comando:
-     ```bash
-     git clone https://github.com/ajls/critterforge.git
-     ```
-  2. Navegue até o diretório do jogo:
-     ```bash
-     cd critterforge
-     ```
-  3. Execute o arquivo `main.c` para iniciar o jogo:
-     ```bash
-     gcc main.c -o critterforge
-     ./critterforge
-     ```
-
-- **Acesso Direto no Replit:**
-  - Clique no seguinte link para acessar e jogar diretamente no Replit: [CRITTERFORGE no Replit](https://replit.com/@ajls/critterforge).
- 
+- **Fazendo um Fork no Replit:**
+  1. Acesse o Replit no seguinte link: [Replit CRITTERFORGE](https://replit.com/@ajls/critterforge).
+  2. Clique no botão "Fork" no canto superior direito da página para criar uma cópia do projeto no seu perfil do Replit.
+  3. Depois de fazer o fork, clique no botão "Run" no arquivo main.c para iniciar o jogo.
 
 **Pokémon Disponíveis:**
 1. **Charmander:**
@@ -51,8 +37,7 @@ Você pode jogar CRITTERFORGE facilmente clonando o repositório em sua máquina
 4. **Pikachu:**
    - Tipo: Elétrico
 
-
-**Principais funções**
+**Principais funções:**
 **Explicação das Principais Funções:**
 
 1. **`pr_pikachu`, `pr_charmander`, `pr_squirtle`, `pr_bulbasour`:**
@@ -84,8 +69,5 @@ Você pode jogar CRITTERFORGE facilmente clonando o repositório em sua máquina
 
 10. **`drawBattleScreen`:**
     - Desenha a tela de batalha, mostrando a representação gráfica dos Pokémon, informações sobre a batalha e as opções de ataque disponíveis.
-
-
-
 
 Divirta-se explorando o mundo de CRITTERFORGE e mostre suas habilidades de treinador Pokémon neste jogo emocionante!
