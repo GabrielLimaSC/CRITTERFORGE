@@ -45,7 +45,8 @@ void insertNode(Node** head, PlayerStats stats) {
     Node* newNode = createNode(stats);
     if (newNode == NULL) {
         fprintf(stderr, "Erro ao alocar memória para o nó.\n");
-        exit(1);
+        screenClear();
+        exit(0);
     }
 
     if (*head == NULL) {
@@ -239,6 +240,7 @@ void savePlayerStats(PlayerStats *winner) {
     file = fopen("player_stats.dat", "w");
     if (file == NULL) {
       fprintf(stderr, "Erro ao criar o arquivo de estatísticas.\n");
+      screenClear();
       exit(0);
     }
   }
@@ -252,6 +254,7 @@ void updatePlayerStats(PlayerStats *winner) {
 
   if (file == NULL) {
     fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
+    screenClear();
     exit(0);
   }
 
@@ -280,6 +283,7 @@ void updatePlayerStats(PlayerStats *winner) {
     file = fopen("player_stats.dat", "a");
     if (file == NULL) {
       fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
+      screenClear();
       exit(0);
     }
 
@@ -288,20 +292,18 @@ void updatePlayerStats(PlayerStats *winner) {
   }
 }
 
-int comparePlayerStats(const void *a, const void *b) {
-    return ((PlayerStats*)b)->victories - ((PlayerStats*)a)->victories;
-}
 
 void loadPlayerStats() {
     char escolha;
     screenSetColor(RED, BLACK);
-    screenClear();
     screenInit(0);
 
     FILE* file = fopen("player_stats.dat", "r");  
     if (file == NULL) {
         fprintf(stderr, "Erro ao abrir o arquivo de estatísticas.\n");
-        exit(1);
+        screenClear();
+        exit(0);
+        
     }
 
     Node* statsList = NULL; 
@@ -315,7 +317,28 @@ void loadPlayerStats() {
 
     fclose(file);
 
-    
+    // Ordenando a lista de estatísticas por número de vitórias (bubble sort)
+    int swapped;
+    Node* ptr1;
+    Node* lptr = NULL;
+
+    do {
+        swapped = 0;
+        ptr1 = statsList;
+
+        while (ptr1->next != lptr) {
+            if (ptr1->data.victories < ptr1->next->data.victories) {
+                // Troca as posições dos nodes se necessário
+                PlayerStats temp = ptr1->data;
+                ptr1->data = ptr1->next->data;
+                ptr1->next->data = temp;
+                swapped = 1;
+            }
+            ptr1 = ptr1->next;
+        }
+        lptr = ptr1;
+    } while (swapped);
+
     int i = 6;
     screenGotoxy(12, 4);
     printf("\n\tMelhores treinadores Pokemon:\n");
@@ -330,11 +353,12 @@ void loadPlayerStats() {
 
     freeList(statsList);
 
-    printf("\n\tJogar novamente? (S/N)\n");
+    printf("\n\tPressione (S) para sair\n");
     scanf(" %c", &escolha);
 
     if (escolha != 's' && escolha != 'S') {
-        exit(0);
+        screenClear();
+        exit(0);  
     }
 }
 void getPlayerName(char *name, int playerNumber) {
@@ -473,13 +497,11 @@ void drawGameOverScreen(Player *currentPlayer, Player *opponent,
   if (playAgainResponse == 'S' || playAgainResponse == 's') {
     *playAgain = 1;
   } else if (playAgainResponse == 'N' || playAgainResponse == 'n') {
+    screenClear();
     exit(0);
   }else{
-    loadPlayerStats();
+    loadPlayerStats(&playAgain);
   }
-
-
-
 }
 
 void drawBattleScreen(Player *currentPlayer, Player *opponent,bool hit) {
