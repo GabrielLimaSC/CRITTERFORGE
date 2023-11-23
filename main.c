@@ -15,9 +15,13 @@ typedef struct {
   char type[10];
   int health;
   int attack1;
+  char attack1name[15];
   int attack2;
+  char attack2name[15];
   int attack3;
+  char attack3name[15];
   int attack4;
+  char attack4name[15];
   int criticalattack;
   char criticaltype[10];
 } Pokemon;
@@ -219,10 +223,10 @@ void pr_bulbasour(int x, int y) {
     printf("⠀⠀⠀⠛⠒⠒⠁⠀⠈⠷⡤⠤⠐⠀⠘⠒⠒⠖⠁⠀\n");
 }
 
-Pokemon choice1 = {"Charmander", "Fire", 100, 15, 20, 10, 10, 25, "Grass"};
-Pokemon choice2 = {"Squirtle", "Water", 100, 15, 20, 10, 10, 25, "Fire"};
-Pokemon choice3 = {"Bulbasaur", "Grass", 100, 15, 20, 10, 10, 25, "Water"};
-Pokemon choice4 = {"Pikachu", "Electric", 100, 15, 20, 10, 10, 20, "Water"};
+Pokemon choice1 = {"Charmander", "Fire", 100, 15,"Fire Spin", 20,"Slash", 10,"Flamethrower", 10,"Tackle", 25, "Grass"};
+Pokemon choice2 = {"Squirtle", "Water", 100, 15,"Water Gun", 20,"Bite", 10,"Water Pulse", 10,"Tackle", 25, "Fire"};
+Pokemon choice3 = {"Bulbasaur", "Grass", 100, 15,"Vine Whip", 20,"False Swipe", 10,"Razor Leaf", 10,"Tackle", 25, "Water"};
+Pokemon choice4 = {"Pikachu", "Electric", 100, 15,"ThunderBolt", 20,"Quick Attack", 10," ElectroBall", 10,"Tackle", 20, "Water"};
 
 typedef struct {
   char playerName[20];
@@ -571,13 +575,13 @@ void drawBattleScreen(Player *currentPlayer, Player *opponent,bool hit) {
   screenGotoxy(40, 15);
   printf("Escolha um ataque %s:", currentPlayer->playerName);
   screenGotoxy(40, 17);
-  printf("[1] %d", currentPlayer->pokemon.attack1);
+  printf("[1] %s ", currentPlayer->pokemon.attack1name);
   screenGotoxy(40, 18);
-  printf("[2] %d", currentPlayer->pokemon.attack2);
+  printf("[2] %s ", currentPlayer->pokemon.attack2name);
   screenGotoxy(40, 19);
-  printf("[3] %d", currentPlayer->pokemon.attack3);
+  printf("[3] %s ", currentPlayer->pokemon.attack3name);
   screenGotoxy(40, 20);
-  printf("[4] %d", currentPlayer->pokemon.attack4);
+  printf("[4] %s ", currentPlayer->pokemon.attack4name);
 
   screenUpdate();
 }
