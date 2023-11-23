@@ -1,5 +1,9 @@
 # CRITTERFORGE
 
+
+** lINK PARA APRESENTAÇÃO **
+https://www.canva.com/design/DAF08KxycyU/jl9T6zy8Xx95ZI0PT4OtsA/edit?utm_content=DAF08KxycyU&utm_campaign=designshare&utm_medium=link2&utm_source=sharebutton
+
 **Descrição do Jogo:**
 
 CRITTERFORGE é um emocionante jogo desenvolvido em linguagem C, onde dois jogadores têm a oportunidade de escolher entre 4 criaturas místicas para travar batalhas épicas e determinar quem alcançará o melhor score no final. Inspirado no universo Pokémon, o jogo é projetado para ser jogado em turnos, proporcionando uma experiência estratégica e divertida.
