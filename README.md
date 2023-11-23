@@ -23,6 +23,20 @@ Você pode jogar CRITTERFORGE facilmente fazendo um fork e executando diretament
   1. Acesse o Replit no seguinte link: [Replit CRITTERFORGE](https://replit.com/@ajls/critterforge).
   2. Clique no botão "Fork" no canto superior direito da página para criar uma cópia do projeto no seu perfil do Replit.
   3. Depois de fazer o fork, clique no botão "Run" no arquivo main.c para iniciar o jogo.
+ 
+  
+Além da opção de fork diretamente no Replit, você também pode usar o GitHub para clonar o repositório do CRITTERFORGE. Aqui estão as instruções adicionais:
+
+Usando o GitHub:
+
+Clone o Repositório:
+
+Abra o GitHub e acesse o repositório do CRITTERFORGE no seguinte link: Repositório CRITTERFORGE no GitHub.
+Clique no botão "Code" e copie o URL fornecido.
+No Replit:
+
+No Replit, clique no botão "Create" para criar um novo projeto.
+Selecione a opção "Import from GitHub" e cole o URL que você copiou.
 
 **Pokémon Disponíveis:**
 1. **Charmander:**
