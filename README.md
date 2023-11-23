@@ -67,25 +67,23 @@ Selecione a opção "Import from GitHub" e cole o URL que você copiou.
 3. **`updatePlayerStats`:**
    - Atualiza as estatísticas de um jogador vencedor no arquivo "player_stats.dat". Se o jogador já estiver presente nas estatísticas, incrementa o número de vitórias; caso contrário, adiciona um novo registro.
 
-4. **`comparePlayerStats`:**
-   - Função de comparação utilizada para ordenar as estatísticas dos jogadores com base no número de vitórias, usada na função `qsort`.
 
-5. **`loadPlayerStats`:**
+4. **`loadPlayerStats`:**
    - Carrega as estatísticas dos jogadores do arquivo "player_stats.dat", ordena essas estatísticas com base nas vitórias e as exibe na tela. Dá a opção ao jogador de jogar novamente, visualizar o placar ou sair do jogo.
 
-6. **`getPlayerName`:**
+5. **`getPlayerName`:**
    - Solicita ao jogador que digite seu nome. A função lê os caracteres diretamente com `getchar` para garantir a entrada correta e atualiza a tela conforme o nome é digitado.
 
-7. **`choosePokemon`:**
+6. **`choosePokemon`:**
    - Permite que o jogador escolha seu Pokémon a partir de uma lista. A função exibe as opções na tela e aguarda a entrada do jogador.
 
-8. **`processPlayerInput`:**
+7. **`processPlayerInput`:**
    - Processa a entrada do jogador durante a batalha, ajustando a saúde do Pokémon adversário com base no ataque escolhido.
 
-9. **`drawGameOverScreen`:**
+8. **`drawGameOverScreen`:**
    - Exibe a tela de fim de jogo, indicando o vencedor e dando a opção de jogar novamente, visualizar o placar ou sair do jogo.
 
-10. **`drawBattleScreen`:**
+9. **`drawBattleScreen`:**
     - Desenha a tela de batalha, mostrando a representação gráfica dos Pokémon, informações sobre a batalha e as opções de ataque disponíveis.
 
 Divirta-se explorando o mundo de CRITTERFORGE e mostre suas habilidades de treinador Pokémon neste jogo emocionante!
